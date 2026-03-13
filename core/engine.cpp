@@ -1,23 +1,32 @@
-#include "engine.h"
-#include "../cli/parser.h"
-#include "../network/http_client.h"
-#include "../crypto/hash.h"
-#include "../threading/thread_pool.h"
+#include "engine.hpp"
+#include <iostream>
 
-void Engine::initialize(){
-ThreadPool pool(4);
-pool.start();
+namespace xyra {
+
+Engine::Engine() {
+    running = false;
+    modules = {"network","crypto","storage","runtime"};
 }
 
-void Engine::execute(int argc,char**argv){
-Parser parser;
-parser.parse(argc,argv);
-
-HttpClient client;
-client.test();
-
-Hash hash;
-hash.demo();
+void Engine::start() {
+    running = true;
+    std::cout << "engine start\n";
 }
 
-void Engine::shutdown(){}
+void Engine::stop() {
+    running = false;
+    std::cout << "engine stop\n";
+}
+
+void Engine::update() {
+    if(!running) return;
+    for(auto &m : modules){
+        std::cout << "module: " << m << "\n";
+    }
+}
+
+std::string Engine::version() {
+    return "xyra-core 1.0";
+}
+
+}
